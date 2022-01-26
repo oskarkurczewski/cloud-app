@@ -41,7 +41,7 @@ function RootNavigator() {
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name="Modal" component={ModalScreen} options={{ title: 'O aplikacji'}} />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -66,8 +66,8 @@ function BottomTabNavigator() {
         name="TabOne"
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Mapa Twojej okolicy',
+          tabBarIcon: ({ color }) => <TabBarIcon name="map-marker" color={color} />,
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate('Modal')}
@@ -75,9 +75,9 @@ function BottomTabNavigator() {
                 opacity: pressed ? 0.5 : 1,
               })}>
               <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
+                name="question-circle"
+                size={35}
+                color={Colors[colorScheme].symbols}
                 style={{ marginRight: 15 }}
               />
             </Pressable>
@@ -88,8 +88,8 @@ function BottomTabNavigator() {
         name="TabTwo"
         component={TabTwoScreen}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'uhhhhhh',
+          tabBarIcon: ({ color }) => <TabBarIcon name="bookmark" color={color} />,
         }}
       />
     </BottomTab.Navigator>
