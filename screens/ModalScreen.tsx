@@ -9,9 +9,9 @@ export default function ModalScreen() {
   return (
     <View style={styles.container}>
       {/* <View style={styles.separator} lightColor="grey" darkColor="grey" /> */}
-      <Text style={styles.title}>O aplikacji FindTheDistance</Text>
+      <Text style={styles.title}>O aplikacji</Text>
       <View style={styles.separator} lightColor="grey" darkColor="grey" />
-      <Text style={styles.description}>Aplikacja służy do znajdowania odległości w linii prostej do dowolnego punktu zaznaczonego na mapie.</Text>
+      <Text style={styles.description}>Aplikacja służy do śledzenia położenia użytkownika i jego trasy.</Text>
       <View style={styles.separator} lightColor="grey" darkColor="grey" />
       <Text style={styles.title}>Autorzy</Text>
       <View style={styles.separator} lightColor="grey" darkColor="grey" />
