@@ -88,8 +88,8 @@ function BottomTabNavigator() {
         name="TabTwo"
         component={TabTwoScreen}
         options={{
-          title: 'uhhhhhh',
-          tabBarIcon: ({ color }) => <TabBarIcon name="bookmark" color={color} />,
+          title: 'Profil użytkownika',
+          tabBarIcon: ({ color }) => <TabBarIcon name="id-card" color={color} />,
         }}
       />
     </BottomTab.Navigator>
