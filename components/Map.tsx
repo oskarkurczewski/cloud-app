@@ -5,6 +5,8 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { LocationObject } from "expo-location";
 import Colors from "../constants/Colors";
 import NetInfo, { useNetInfo } from "@react-native-community/netinfo";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Map = () => {
   const [location, setLocation] = useState<any | null>({
@@ -21,7 +23,35 @@ const Map = () => {
     },
   });
   const [errorMsg, setErrorMsg] = useState<any | null>(null);
-  const [refreshUserLocalisation, setRefreshUserLocalisation] = useState(true);
+  const [bufferArray, setBufferArray] = useState([]);
+  const netInfo = useNetInfo();
+
+  const storeData = async (value: any) => {
+    try {
+      let data = await getData();
+      if (data != null) {
+        console.log("storuje jesli nie null")
+        let temp = JSON.parse(data);
+        temp.push(value);
+        await AsyncStorage.setItem('@storage_Key', JSON.stringify(temp));
+      } else {
+        console.log("storuje jesli null")
+        
+        await AsyncStorage.setItem('@storage_Key', JSON.stringify([value]));
+      }
+    } catch (e) {
+      // saving error
+    }
+  }
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('@storage_Key')
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch(e) {
+      // error reading value
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -30,7 +60,6 @@ const Map = () => {
         setErrorMsg("Permission to access location was denied");
         return;
       }
-
       await Location.watchPositionAsync(
         {
           timeInterval: 5000,
@@ -44,6 +73,22 @@ const Map = () => {
           setLocation(payload);
         }
       );
+      //TODO:odwrocic warunki w isConnected 
+      // console.log(location)
+      // if (netInfo.isConnected) {
+      //   if (bufferArray != []) {
+      //   // wyslanie bufora
+      //   console.log(await getData());
+      //   }
+      // }
+
+      // if (!netInfo.isConnected) {
+      //   let date = new Date().getTime()
+
+      //   storeData({...location, timestamp: date})
+      // } 
+
+
     })();
   }, []);
 
@@ -51,17 +96,16 @@ const Map = () => {
 
   
 
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state: { type: any; isConnected: any; }) => {
-      console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
-    });
-  }, [])
+  // useEffect(() => {
+  //   const unsubscribe = NetInfo.addEventListener(state => {
+  //     console.log("Connection type", state.type);
+  //     console.log("Is connected?", state.isConnected);
+  //   });
+  // }, [])
 
-  const netInfo = useNetInfo();
 
-  console.log("lokalizacja: ", location);
-  console.log("internet:", netInfo.isConnected)
+  // console.log("lokalizacja: ", location);
+  // console.log("internet:", netInfo.isConnected)
 
 
   let text = "Waiting..";
