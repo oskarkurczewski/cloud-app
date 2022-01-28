@@ -3,13 +3,28 @@ import { StyleSheet } from 'react-native';
 import Colors from '../constants/Colors';
 import { Text, View } from '../components/Themed';
 import UserContext from "../context/UserContext";
+import Button from "../components/Button";
+import navigation from '../navigation';
+import { RootTabScreenProps } from '../types';
+import * as SecureStore from "expo-secure-store";
 
-export default function TabTwoScreen() {
+export default function TabTwoScreen({
+  navigation,
+}: RootTabScreenProps<"TabTwo">) {
+
+  async function save(key: string, value: string) {
+    await SecureStore.setItemAsync(key, value);
+  }
+  
 
   const userContext: any = useContext(UserContext);
 
-  const onLogin = () => {
-    console.log('logowanie')
+  const onLogout = async () => {
+    console.log('wylogowanie')
+    userContext.setUserId(null)
+    userContext.setUserName(null)
+    await save("auth-token", '')
+    navigation.navigate("Start");
   }
 
   return (
@@ -21,11 +36,16 @@ export default function TabTwoScreen() {
         <Text style={styles.content}>2. Aby <Text style={styles.stop}>zakończyć</Text> swoją trasę, przejdź do widoku mapy i użyj przycisku <Text style={styles.stop}>STOP.</Text></Text>
         <Text style={styles.content}>3. Aby <Text style={styles.trasa}>wyświetlić</Text> swoją trasę, przejdź do widoku mapy i użyj przycisku <Text style={styles.trasa}>TRASA.</Text></Text>
       </View>
+      <View style={styles.buttonContainer}></View>
+      <Button onPress={onLogout} title="Wyloguj się"/>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    paddingTop: 160,
+  },
   container: {
     flex: 1,
     alignItems: 'center',

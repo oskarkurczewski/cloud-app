@@ -1,12 +1,17 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-
+import React, {useEffect} from 'react';
+import { Platform, StyleSheet } from 'react-native';
 import EditScreenInfo from '../components/EditScreenInfo';
 import Map from '../components/Map';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
 
-export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function TabOneScreen(this: any, { navigation }: RootTabScreenProps<'TabOne'>) {
+
+  // navigation.reset({
+  //   index: 0,
+  //   routes: [{name: 'R'}],
+  // })
+ 
   return (
     <View style={styles.container}>
       <Map/>

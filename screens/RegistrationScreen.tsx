@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     // flex: 1,
-    // marginTop: 84,
+    marginTop: 14,
     alignItems: "center",
     justifyContent: "space-evenly",
     flexDirection: "row",
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 80,
-    // marginBottom: 70,
+    marginBottom: 15,
     fontSize: 50,
     fontWeight: "bold",
     color: Colors.dark.symbols,
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 220,
     paddingLeft: 10,
-    // marginTop: 20,
+    marginBottom: 6,
     borderWidth: 3,
     borderRadius: 5,
     borderColor: Colors.dark.tint,

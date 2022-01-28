@@ -29,7 +29,7 @@ export default function LoginScreen({
   const userContext: any = useContext(UserContext);
 
   const onLogin = async () => {
-    console.log("gowno");
+    console.log("login");
 
     try {
       const result: any = await axios
