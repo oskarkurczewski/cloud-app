@@ -61,7 +61,7 @@ const Map = () => {
 
   // const TIME_MS = 300000;
   const TIME_MS = 1000;
-  console.log("lokalizacja: ", location);
+  // console.log("lokalizacja: ", location);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
