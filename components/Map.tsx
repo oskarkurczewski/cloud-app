@@ -29,7 +29,6 @@ async function getValueFor(key: string) {
 
 const Map = () => {
   const userContext: any = useContext(UserContext);
-  console.log("context", userContext);
 
   const [location, setLocation] = useState<any | null>({
     timestamp: 0,
@@ -47,7 +46,7 @@ const Map = () => {
   const [errorMsg, setErrorMsg] = useState<any | null>(null);
   const [bufferArray, setBufferArray] = useState([]);
   const [toggle, setToggle] = useState(true);
-  const [point, setPoints] = useState([ ]);
+  const [point, setPoints] = useState([]);
   const netInfo = useNetInfo();
 
   const storeData = async (value: any) => {
@@ -79,7 +78,8 @@ const Map = () => {
   const toggleTracking = React.useRef();
 
   const subTracking = async () => {
-    setPoints([])
+    await AsyncStorage.clear();
+    setPoints([]);
     console.log("id", userContext.userId);
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -91,23 +91,31 @@ const Map = () => {
         timeInterval: 5000,
         accuracy: Location.Accuracy.Highest,
       },
-      (loc) => {
+      async (loc) => {
         const payload = {
           latitude: loc.coords.latitude,
           longitude: loc.coords.longitude,
         };
         console.log("tak o");
+        let date = new Date().getTime();
         try {
-          let date = new Date().getTime();
-          
-          const result: any =
-         axios.put(`/location/user/${userContext.userId}`, {
-          location: {...payload, timestamp: date}
-        })
-        } catch (e) {
-          console.log(e);
+          const result: any = await axios
+            .put(`/location/user/${userContext.userId}`, {
+              location: { ...payload, timestamp: date },
+            })
+            .catch((err) => Promise.reject(err));
+          let data = await getData();
+          if (data != null && data.length > 0) {
+            await storeData({ ...payload, timestamp: date });
+            await AsyncStorage.clear();
+          }
+        } catch (e: any) {
+          if (e.response.status != 401) {
+            await storeData({ ...payload, timestamp: date });
+          }
+          console.log(e.message);
         }
-        
+
         setLocation(payload);
       }
     );
@@ -117,16 +125,19 @@ const Map = () => {
   const stopTracking = async () => {
     toggleTracking.current.remove();
     console.log("wylaczylem");
-
   };
 
   const showTrack = async () => {
-    const points = await axios.get(`/location/user/${userContext.userId}`)
-    let newLocation:any = [];
-    points.data.data.map((location:any, index:any) => {
-      newLocation.push({ latitude: location.latitude, longitude: location.longitude, timestamp: location.timestamp })
-    })
-    await axios.delete(`/location/user/${userContext.userId}/all`)
+    const points = await axios.get(`/location/user/${userContext.userId}`);
+    let newLocation: any = [];
+    points.data.data.map((location: any, index: any) => {
+      newLocation.push({
+        latitude: location.latitude,
+        longitude: location.longitude,
+        timestamp: location.timestamp,
+      });
+    });
+    await axios.delete(`/location/user/${userContext.userId}/all`);
     setPoints(newLocation);
   };
 
@@ -145,19 +156,19 @@ const Map = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      if (netInfo.isConnected) {
-        // wyslanie bufora i czyszczenie bufora
-      }
+  // useEffect(() => {
+  //   (async () => {
+  //     if (netInfo.isConnected) {
+  //       // wyslanie bufora i czyszczenie bufora
+  //     }
 
-      if (!netInfo.isConnected) {
-        let date = new Date().getTime();
+  //     if (!netInfo.isConnected) {
+  //       let date = new Date().getTime();
 
-        storeData({ ...location, timestamp: date });
-      }
-    })();
-  }, [toggle]);
+  //       storeData({ ...location, timestamp: date });
+  //     }
+  //   })();
+  // }, [toggle]);
 
   let text = "Waiting..";
   if (errorMsg) {
@@ -280,7 +291,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "green",
     borderRadius: 99,
-    backgroundColor: 'green',
+    backgroundColor: "green",
   },
   myLocation3: {
     position: "absolute",
@@ -291,28 +302,25 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderWidth: 1,
-    borderColor: 'red',
+    borderColor: "red",
     borderRadius: 99,
-    backgroundColor: 'red',
+    backgroundColor: "red",
   },
   iconGreen: {
     alignItems: "center",
     justifyContent: "center",
-
   },
   iconRed: {
     alignItems: "center",
     justifyContent: "center",
-
   },
   iconPink: {
     alignItems: "center",
     justifyContent: "center",
-    
   },
   iconText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
 });
 
