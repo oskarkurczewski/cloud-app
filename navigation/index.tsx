@@ -52,27 +52,11 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Start"
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Register"
-        component={RegistrationScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Root"
-        component={BottomTabNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen
-          name="Modal"
-          component={ModalScreen}
-          options={{ title: "O aplikacji" }}
-        />
+      <Stack.Screen name="Start" component = {LoginScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="Register" component = {RegistrationScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="Root" component={BottomTabNavigator} options={{headerShown: false}}/>
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen name="Modal" component={ModalScreen} options={{ title: ''}} />
       </Stack.Group>
     </Stack.Navigator>
   );

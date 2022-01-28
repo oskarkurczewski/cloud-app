@@ -210,18 +210,18 @@ const Map = () => {
         </MapView>
       ) : null}
       <View style={styles.myLocation}>
-        <Pressable style={styles.icon} onPress={showTrack}>
-          <Text>pokaz</Text>
+        <Pressable style={styles.iconGreen} onPress={showTrack}>
+          <Text style={styles.iconText}>TRASA</Text>
         </Pressable>
       </View>
       <View style={styles.myLocation2}>
-        <Pressable style={styles.icon} onPress={subTracking}>
-          <Text>wlacz</Text>
+        <Pressable style={styles.iconRed} onPress={subTracking}>
+          <Text style={styles.iconText}>START</Text>
         </Pressable>
       </View>
       <View style={styles.myLocation3}>
-        <Pressable style={styles.icon} onPress={stopTracking}>
-          <Text>wylacz</Text>
+        <Pressable style={styles.iconPink} onPress={stopTracking}>
+          <Text style={styles.iconText}>STOP</Text>
         </Pressable>
       </View>
     </View>
@@ -258,29 +258,29 @@ const styles = StyleSheet.create({
   },
   myLocation: {
     position: "absolute",
-    bottom: 250,
+    bottom: 240,
     right: 35,
     alignItems: "center",
     justifyContent: "center",
-    width: 45,
-    height: 45,
+    width: 50,
+    height: 50,
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: Colors.light.symbols,
     borderRadius: 99,
-    backgroundColor: "white",
+    backgroundColor: Colors.light.symbols,
   },
   myLocation2: {
     position: "absolute",
-    bottom: 350,
+    bottom: 360,
     right: 35,
     alignItems: "center",
     justifyContent: "center",
-    width: 45,
-    height: 45,
+    width: 50,
+    height: 50,
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: "green",
     borderRadius: 99,
-    backgroundColor: "white",
+    backgroundColor: 'green',
   },
   myLocation3: {
     position: "absolute",
@@ -288,16 +288,31 @@ const styles = StyleSheet.create({
     right: 35,
     alignItems: "center",
     justifyContent: "center",
-    width: 45,
-    height: 45,
+    width: 50,
+    height: 50,
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: 'red',
     borderRadius: 99,
-    backgroundColor: "white",
+    backgroundColor: 'red',
   },
-  icon: {
+  iconGreen: {
     alignItems: "center",
     justifyContent: "center",
+
+  },
+  iconRed: {
+    alignItems: "center",
+    justifyContent: "center",
+
+  },
+  iconPink: {
+    alignItems: "center",
+    justifyContent: "center",
+    
+  },
+  iconText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 

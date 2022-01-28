@@ -44,6 +44,7 @@ export default function LoginScreen({
         result.headers["auth-token"];
       const payload: any = jwt_decode(result.headers["auth-token"]);
       userContext.setUserId(payload._id);
+      userContext.setUserName(login);
       console.log(await getValueFor("auth-token"));
       setErrorMessage("");
       // onChangeLogin("");

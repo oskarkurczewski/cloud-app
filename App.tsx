@@ -17,10 +17,13 @@ export default function App() {
   const colorScheme = useColorScheme();
 
   const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState(null);
 
   const userObject = {
     userId,
+    userName,
     setUserId,
+    setUserName,
   };
 
   if (!isLoadingComplete) {
