@@ -18,6 +18,7 @@ import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import RegistrationScreen from '../screens/RegistrationScreen';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -39,8 +40,8 @@ function RootNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Start" component = {LoginScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="Register" component = {RegistrationScreen} options={{headerShown: false}}/>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{headerShown: false}}/>
-      {/* <Stack.Screen name="Main" component={BottomTabNavigator} options={{ headerShown: false }} /> */}
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} options={{ title: 'O aplikacji'}} />
       </Stack.Group>

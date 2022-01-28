@@ -6,24 +6,25 @@ import Button from '../components/Button';
 import Colors from '../constants/Colors';
 
 
-export default function LoginScreen({ navigation }: RootStackScreenProps<'Start'>) {
-
-    const onLogin = () => {
-        console.log('logowanie')
-        navigation.navigate("Root")
-    }
+export default function RegistrationScreen({ navigation }: RootStackScreenProps<'Register'>) {
 
     const onRegister = () => {
         console.log('rejestracja')
-        navigation.navigate("Register")
+        // navigation.navigate("Root")
+    }
+
+    const onBack = () => {
+        console.log('logowanie')
+        navigation.navigate("Start")
     }
 
     const [login, onChangeLogin] = React.useState("");
     const [password, onChangePassword] = React.useState("");
+    const [repeat, onChangeRepeat] = React.useState("");
 
     return (
     <View style={styles.container}>
-        <Text style={styles.title}>Zaloguj się!</Text>
+        <Text style={styles.title}>Zarejestruj się!</Text>
         <SafeAreaView>
             <View style={styles.inputContainer}>
                 <Text style={styles.inputDescription}>Login:</Text>
@@ -33,10 +34,14 @@ export default function LoginScreen({ navigation }: RootStackScreenProps<'Start'
                 <Text style={styles.inputDescription}>Hasło:</Text>
                 <TextInput style={styles.input} onChangeText={onChangePassword} value={password}/>
             </View>
+            <View style={styles.inputContainer}>
+                <Text style={styles.inputDescription}>Powtórz hasło:</Text>
+                <TextInput style={styles.input} onChangeText={onChangeRepeat} value={repeat}/>
+            </View>
         </SafeAreaView>
         <View style={styles.buttonContainer}>
-            <Button onPress={onLogin} title='Zaloguj się'/>
             <Button onPress={onRegister} title='Zarejestruj się'/>
+            <Button onPress={onBack} title='Anuluj'/>
         </View>
     </View>
   );
@@ -49,7 +54,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     // flex: 1,
-    marginTop: 175,
+    marginTop: 84,
     alignItems: 'center',
     justifyContent: 'space-evenly',
     flexDirection: 'row',
