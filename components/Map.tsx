@@ -14,6 +14,17 @@ import Colors from "../constants/Colors";
 import NetInfo, { useNetInfo } from "@react-native-community/netinfo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+import jwt_decode from "jwt-decode";
+
+async function getValueFor(key: string) {
+  let result = await SecureStore.getItemAsync(key);
+  if (result) {
+    return result;
+  } else {
+    return null;
+  }
+}
 
 const Map = () => {
   const [location, setLocation] = useState<any | null>({
@@ -31,6 +42,7 @@ const Map = () => {
   });
   const [errorMsg, setErrorMsg] = useState<any | null>(null);
   const [bufferArray, setBufferArray] = useState([]);
+  const [userId, setUserId] = useState(null);
   const [toggle, setToggle] = useState(true);
   const [point, setPoints] = useState([
     { latitude: 51.5870822, longitude: 18.9373025, timestamp: 1643314865609 },
@@ -68,6 +80,7 @@ const Map = () => {
   const toggleTracking = React.useRef();
 
   const subTracking = async () => {
+    console.log("id", userId);
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       setErrorMsg("Permission to access location was denied");
@@ -109,6 +122,20 @@ const Map = () => {
       setLocation(location.coords);
     })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const token: string | null = await getValueFor("auth-token");
+        if (token) {
+          const payload: any = jwt_decode(token);
+          setUserId(payload._id);
+        }
+      } catch (error) {
+        console.log("error while fetching token", error);
+      }
+    })();
+  });
 
   useEffect(() => {
     (async () => {

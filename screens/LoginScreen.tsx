@@ -36,18 +36,20 @@ export default function LoginScreen({
       axios.defaults.headers.common["auth-token"] =
         result.headers["auth-token"];
       console.log(await getValueFor("auth-token"));
+      // onChangeLogin("");
+      // onChangePassword("");
+      navigation.navigate("Root");
     } catch (error) {
       console.log("error while logging in", error);
     }
-    navigation.navigate("Root");
   };
 
   const onRegister = () => {
     navigation.navigate("Register");
   };
 
-  const [login, onChangeLogin] = React.useState("");
-  const [password, onChangePassword] = React.useState("");
+  const [login, onChangeLogin] = React.useState("norbert");
+  const [password, onChangePassword] = React.useState("czesc");
 
   return (
     <View style={styles.container}>
