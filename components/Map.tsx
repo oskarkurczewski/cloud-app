@@ -47,11 +47,7 @@ const Map = () => {
   const [errorMsg, setErrorMsg] = useState<any | null>(null);
   const [bufferArray, setBufferArray] = useState([]);
   const [toggle, setToggle] = useState(true);
-  const [point, setPoints] = useState([
-    { latitude: 51.5870822, longitude: 18.9373025, timestamp: 1643314865609 },
-    { latitude: 51.5850222, longitude: 18.9353225, timestamp: 1643314865609 },
-    { latitude: 51.5861022, longitude: 18.9533425, timestamp: 1643314865609 },
-  ]);
+  const [point, setPoints] = useState([ ]);
   const netInfo = useNetInfo();
 
   const storeData = async (value: any) => {
@@ -83,7 +79,8 @@ const Map = () => {
   const toggleTracking = React.useRef();
 
   const subTracking = async () => {
-    console.log("id", userId);
+    setPoints([])
+    console.log("id", userContext.userId);
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       setErrorMsg("Permission to access location was denied");
@@ -100,15 +97,37 @@ const Map = () => {
           longitude: loc.coords.longitude,
         };
         console.log("tak o");
-        // axios.put("/api/location/user/")
+        try {
+          let date = new Date().getTime();
+          
+          const result: any =
+         axios.put(`/location/user/${userContext.userId}`, {
+          location: {...payload, timestamp: date}
+        })
+        } catch (e) {
+          console.log(e);
+        }
+        
         setLocation(payload);
       }
     );
-    console.log("wlaczylem/wylaczylem");
+    console.log("wlaczylem");
   };
 
   const stopTracking = async () => {
     toggleTracking.current.remove();
+    console.log("wylaczylem");
+
+  };
+
+  const showTrack = async () => {
+    const points = await axios.get(`/location/user/${userContext.userId}`)
+    let newLocation:any = [];
+    points.data.data.map((location:any, index:any) => {
+      newLocation.push({ latitude: location.latitude, longitude: location.longitude, timestamp: location.timestamp })
+    })
+    await axios.delete(`/location/user/${userContext.userId}/all`)
+    setPoints(newLocation);
   };
 
   useEffect(() => {
@@ -186,10 +205,15 @@ const Map = () => {
               "#238C23",
               "#7F0000",
             ]}
-            strokeWidth={6}
+            strokeWidth={2}
           />
         </MapView>
       ) : null}
+      <View style={styles.myLocation}>
+        <Pressable style={styles.icon} onPress={showTrack}>
+          <Text>pokaz</Text>
+        </Pressable>
+      </View>
       <View style={styles.myLocation2}>
         <Pressable style={styles.icon} onPress={subTracking}>
           <Text>wlacz</Text>
@@ -231,6 +255,19 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 30 / 2,
     backgroundColor: Colors.dark.tabIconSelected,
+  },
+  myLocation: {
+    position: "absolute",
+    bottom: 250,
+    right: 35,
+    alignItems: "center",
+    justifyContent: "center",
+    width: 45,
+    height: 45,
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 99,
+    backgroundColor: "white",
   },
   myLocation2: {
     position: "absolute",
