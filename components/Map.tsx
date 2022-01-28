@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Platform,
   Text,
@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import jwt_decode from "jwt-decode";
+import UserContext from "../context/UserContext";
 
 async function getValueFor(key: string) {
   let result = await SecureStore.getItemAsync(key);
@@ -27,6 +28,9 @@ async function getValueFor(key: string) {
 }
 
 const Map = () => {
+  const userContext: any = useContext(UserContext);
+  console.log("context", userContext);
+
   const [location, setLocation] = useState<any | null>({
     timestamp: 0,
     mocked: false,
@@ -42,7 +46,6 @@ const Map = () => {
   });
   const [errorMsg, setErrorMsg] = useState<any | null>(null);
   const [bufferArray, setBufferArray] = useState([]);
-  const [userId, setUserId] = useState(null);
   const [toggle, setToggle] = useState(true);
   const [point, setPoints] = useState([
     { latitude: 51.5870822, longitude: 18.9373025, timestamp: 1643314865609 },
@@ -122,20 +125,6 @@ const Map = () => {
       setLocation(location.coords);
     })();
   }, []);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const token: string | null = await getValueFor("auth-token");
-        if (token) {
-          const payload: any = jwt_decode(token);
-          setUserId(payload._id);
-        }
-      } catch (error) {
-        console.log("error while fetching token", error);
-      }
-    })();
-  });
 
   useEffect(() => {
     (async () => {

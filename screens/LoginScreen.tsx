@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { SafeAreaView, StyleSheet, TextInput } from "react-native";
 import { Text, View } from "../components/Themed";
 import { RootStackScreenProps } from "../types";
@@ -6,6 +6,8 @@ import Button from "../components/Button";
 import Colors from "../constants/Colors";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
+import UserContext from "../context/UserContext";
+import jwt_decode from "jwt-decode";
 
 async function save(key: string, value: string) {
   await SecureStore.setItemAsync(key, value);
@@ -23,6 +25,8 @@ async function getValueFor(key: string) {
 export default function LoginScreen({
   navigation,
 }: RootStackScreenProps<"Start">) {
+  const userContext: any = useContext(UserContext);
+
   const onLogin = async () => {
     console.log("gowno");
 
@@ -35,6 +39,8 @@ export default function LoginScreen({
       await save("auth-token", result.headers["auth-token"]);
       axios.defaults.headers.common["auth-token"] =
         result.headers["auth-token"];
+      const payload: any = jwt_decode(result.headers["auth-token"]);
+      userContext.setUserId(payload._id);
       console.log(await getValueFor("auth-token"));
       // onChangeLogin("");
       // onChangePassword("");
