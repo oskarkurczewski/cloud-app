@@ -5,33 +5,43 @@ import { RootStackScreenProps } from "../types";
 import Button from "../components/Button";
 import Colors from "../constants/Colors";
 import axios from "axios";
+import ErrorMessage from "../components/ErrorMessage";
 
 export default function RegistrationScreen({
   navigation,
 }: RootStackScreenProps<"Register">) {
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [login, onChangeLogin] = React.useState("");
+  const [email, onChangeEmail] = React.useState("");
+  const [password, onChangePassword] = React.useState("");
+  const [repeat, onChangeRepeat] = React.useState("");
+
   const onRegister = async () => {
-    if (password != repeat) return;
+    if (password != repeat) {
+      setErrorMessage("Wprowadzone hasła się nie zgadzają!");
+      return;
+    }
 
     try {
-      await axios.post("/auth/signup", {
-        login,
-        email,
-        password,
-      });
-    } catch (error) {
-      console.log("error while registering", error);
+      await axios
+        .post("/auth/signup", {
+          login,
+          email,
+          password,
+        })
+        .catch((error) => Promise.reject(error));
+      setErrorMessage("");
+      navigation.goBack();
+    } catch (error: any) {
+      const err = await error;
+      console.log("error while registering", err);
+      setErrorMessage(err.message);
     }
-    navigation.goBack();
   };
 
   const onBack = () => {
     navigation.goBack();
   };
-
-  const [login, onChangeLogin] = React.useState("");
-  const [email, onChangeEmail] = React.useState("");
-  const [password, onChangePassword] = React.useState("");
-  const [repeat, onChangeRepeat] = React.useState("");
 
   return (
     <View style={styles.container}>
@@ -74,6 +84,7 @@ export default function RegistrationScreen({
         <Button onPress={onRegister} title="Zarejestruj się" />
         <Button onPress={onBack} title="Anuluj" />
       </View>
+      {errorMessage ? <ErrorMessage title="Błąd" text={errorMessage} /> : null}
     </View>
   );
 }
