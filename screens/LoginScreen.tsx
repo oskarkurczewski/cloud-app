@@ -8,6 +8,7 @@ import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import UserContext from "../context/UserContext";
 import jwt_decode from "jwt-decode";
+import ErrorMessage from "../components/ErrorMessage";
 
 async function save(key: string, value: string) {
   await SecureStore.setItemAsync(key, value);
@@ -31,10 +32,12 @@ export default function LoginScreen({
     console.log("gowno");
 
     try {
-      const result: any = await axios.post("/auth/signin", {
-        login,
-        password,
-      });
+      const result: any = await axios
+        .post("/auth/signin", {
+          login,
+          password,
+        })
+        .catch((err) => Promise.reject(err));
       if (!result.headers["auth-token"]) return;
       await save("auth-token", result.headers["auth-token"]);
       axios.defaults.headers.common["auth-token"] =
@@ -42,11 +45,16 @@ export default function LoginScreen({
       const payload: any = jwt_decode(result.headers["auth-token"]);
       userContext.setUserId(payload._id);
       console.log(await getValueFor("auth-token"));
+      setErrorMessage("");
       // onChangeLogin("");
       // onChangePassword("");
       navigation.navigate("Root");
-    } catch (error) {
-      console.log("error while logging in", error);
+    } catch (error: any) {
+      const err = await error;
+      console.log("error while logging in", err);
+      if (err.response.status == 400)
+        setErrorMessage("Wprowadzono zły login albo hasło!");
+      else setErrorMessage(error.message);
     }
   };
 
@@ -56,6 +64,7 @@ export default function LoginScreen({
 
   const [login, onChangeLogin] = React.useState("norbert");
   const [password, onChangePassword] = React.useState("czesc");
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   return (
     <View style={styles.container}>
@@ -82,6 +91,7 @@ export default function LoginScreen({
         <Button onPress={onLogin} title="Zaloguj się" />
         <Button onPress={onRegister} title="Zarejestruj się" />
       </View>
+      {errorMessage ? <ErrorMessage title="Błąd" text={errorMessage} /> : null}
     </View>
   );
 }
